@@ -1,0 +1,21 @@
+﻿@model BeautyKizzy.Models.Herramienta
+@{
+    ViewData["Title"] = "Desactivar herramienta";
+}
+
+<div class="card-kizzy p-4" style="max-width:500px; margin:0 auto;">
+    <h3 class="titulo-serif mb-3">¿Desactivar esta herramienta?</h3>
+
+    <div class="card-kizzy p-3 mb-4" style="background:var(--rosa-claro);">
+        <div class="fw-semibold">@Model.Nombre</div>
+        <div class="small text-muted">Total: @Model.CantidadTotal · Estado: @Model.Estado</div>
+    </div>
+
+    <form method="post" asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="d-flex gap-2 justify-content-end">
+            <a asp-action="Index" class="btn btn-outline-kizzy px-4">Cancelar</a>
+            <button type="submit" class="btn-primary-kizzy px-4">Sí, desactivar</button>
+        </div>
+    </form>
+</div>

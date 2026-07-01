@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Reserva>
+@using BeautyKizzy.Models
+@{
+    ViewData["Title"] = "Reservas";
+}
+
+<div class="mb-4">
+    <h2 class="titulo-serif mb-0">Reservas del salón</h2>
+    <p class="text-muted small mb-0">@Model.Count() reservas en total</p>
+</div>
+
+<div class="card-kizzy p-0">
+    <table class="table table-kizzy mb-0">
+        <thead>
+            <tr>
+                <th class="ps-3">Fecha y hora</th>
+                <th>Cliente</th>
+                <th>Servicio</th>
+                <th>Especialista</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td class="ps-3">
+                        <div class="fw-semibold small">@r.FechaHora.ToString("dd/MM/yyyy")</div>
+                        <div class="text-muted small">@r.FechaHora.ToString("HH:mm")</div>
+                    </td>
+                    <td>@r.Cliente?.Nombre</td>
+                    <td>@r.Servicio?.Nombre</td>
+                    <td>@r.Empleado?.Usuario?.Nombre</td>
+                    <td>
+                        @{
+                            var (claseEstado, textoEstado) = r.Estado switch
+                            {
+                                EstadoReserva.Pendiente => ("stock-medio", "Pendiente"),
+                                EstadoReserva.Confirmada => ("stock-ok", "Confirmada"),
+                                EstadoReserva.EnCurso => ("badge-rol badge-rol-gerente", "En curso"),
+                                EstadoReserva.Completada => ("badge-rol badge-rol-empleado", "Completada"),
+                                EstadoReserva.Cancelada => ("stock-bajo", "Cancelada"),
+                                _ => ("stock-medio", r.Estado.ToString())
+                            };
+                        }
+                        <span class="@claseEstado">@textoEstado</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

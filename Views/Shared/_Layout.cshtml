@@ -1,0 +1,273 @@
+﻿@using BeautyKizzy.Models
+@{
+    var rol = Context.Session.GetString("UsuarioRol");
+    var nombreUsuario = Context.Session.GetString("UsuarioNombre");
+    var logueado = !string.IsNullOrEmpty(rol);
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BeautyKizzy</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+            body {
+                font-family: 'Poppins',sans-serif;
+                background: #faf7f8;
+            }
+
+            .navbar-kizzy {
+                background: rgba(255,255,255,.92);
+                backdrop-filter: blur(14px);
+                box-shadow: 0 8px 30px rgba(0,0,0,.08);
+            }
+
+            .logo-kizzy {
+                font-family: 'Fraunces',serif;
+                font-size: 2rem;
+                font-weight: 600;
+                color: #d85d86 !important;
+            }
+
+            .nav-link {
+                font-weight: 500;
+                border-radius: 12px;
+                padding: .6rem .9rem !important;
+                transition: .25s;
+            }
+
+                .nav-link:hover {
+                    background: #fdebf1;
+                    color: #d85d86 !important;
+                }
+
+            .dropdown-menu {
+                border: none;
+                border-radius: 18px;
+                box-shadow: 0 15px 35px rgba(0,0,0,.08);
+                padding: .7rem;
+            }
+
+            .dropdown-item {
+                border-radius: 10px;
+                padding: .55rem .8rem;
+            }
+
+                .dropdown-item:hover {
+                    background: #fdebf1;
+                    color: #d85d86;
+                }
+
+            main.container {
+                margin-top: 25px;
+                min-height: 80vh;
+            }
+
+            .footer-kizzy {
+                background: white;
+                border-top: 1px solid #eee;
+            }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-kizzy sticky-top">
+        <div class="container">
+
+            <a class="navbar-brand logo-kizzy" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-scissors me-2"></i>BeautyKizzy
+            </a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+
+                <ul class="navbar-nav me-auto">
+
+                    @if (!logueado || rol == Roles.Cliente)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index"><i class="bi bi-house-heart me-1"></i>Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Servicios" asp-action="Index"><i class="bi bi-stars me-1"></i>Servicios</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Promociones" asp-action="Index"><i class="bi bi-gift me-1"></i>Promociones</a></li>
+                    }
+
+                    @if (rol == Roles.Cliente)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Reservas" asp-action="Agendar"><i class="bi bi-calendar-heart me-1"></i>Agendar</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Reservas" asp-action="MisReservas"><i class="bi bi-clock-history me-1"></i>Mis citas</a></li>
+                    }
+
+                    @if (rol == Roles.Empleado)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Reservas" asp-action="MiAgenda">Mi agenda</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Servicios" asp-action="Index">Servicios</a></li>
+                    }
+
+                    @if (rol == Roles.Gerente || rol == Roles.Admin)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Reservas" asp-action="Index">Reservas</a></li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Catálogo</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Servicios" asp-action="Index">Servicios</a></li>
+                                <li><a class="dropdown-item" asp-controller="Categorias" asp-action="Index">Categorías</a></li>
+                                <li><a class="dropdown-item" asp-controller="Promociones" asp-action="Index">Promociones</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Inventario</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Productos" asp-action="Index">Productos</a></li>
+                                <li><a class="dropdown-item" asp-controller="Proveedores" asp-action="Index">Proveedores</a></li>
+                                <li><a class="dropdown-item" asp-controller="Herramientas" asp-action="Index">Herramientas</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item"><a class="nav-link" asp-controller="Facturas" asp-action="Index">Facturas</a></li>
+                    }
+
+                    @if (rol == Roles.Admin)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Empleados" asp-action="Index">Empleados</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Reportes" asp-action="Dashboard">Reportes</a></li>
+                    }
+
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+
+                    @if (logueado)
+                    {
+                        <a asp-controller="Notificaciones" asp-action="Index" class="nav-link"><i class="bi bi-bell-fill"></i></a>
+                        <span class="badge text-bg-light">@Roles.GetNombreAmigable(rol!)</span>
+                        <span class="fw-semibold">@nombreUsuario</span>
+                        <a class="btn btn-outline-danger rounded-pill" asp-controller="Account" asp-action="Logout">Salir</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-secondary rounded-pill" asp-controller="Account" asp-action="Login">Ingresar</a>
+                        <a class="btn btn-danger rounded-pill" asp-controller="Account" asp-action="Register">Registrarse</a>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        @if (TempData["Mensaje"] != null)
+        {
+            <div class="alert alert-success">@TempData["Mensaje"]</div>
+        }
+        @RenderBody()
+    </main>
+
+    <footer class="footer-kizzy mt-5">
+
+        <div class="container py-5">
+
+            <div class="row gy-4">
+
+                <!-- BeautyKizzy -->
+                <div class="col-lg-4">
+
+                    <h3 class="titulo-serif mb-3">
+                        BeautyKizzy
+                    </h3>
+
+                    <p class="text-muted">
+                        Tu belleza, nuestro cuidado.
+                        Un salón pensado para brindarte una experiencia única con
+                        atención personalizada y servicios profesionales.
+                    </p>
+
+                </div>
+
+                <!-- Contacto -->
+                <div class="col-lg-4">
+
+                    <h5 class="mb-3">
+                        Contacto
+                    </h5>
+
+                    <p>
+                        <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                        Av. América, Cochabamba - Bolivia
+                    </p>
+
+                    <p>
+                        <i class="bi bi-clock-fill text-warning me-2"></i>
+                        Lun - Sáb<br>
+                        08:00 - 12:00 y 13:00 - 21:00
+                    </p>
+
+                    <p>
+                        <i class="bi bi-envelope-fill text-primary me-2"></i>
+                        contacto@beautykizzy.com
+                    </p>
+
+                </div>
+
+                <!-- Redes -->
+                <div class="col-lg-4">
+
+                    <h5 class="mb-3">
+                        Síguenos
+                    </h5>
+
+                    <div class="d-flex gap-3 mb-4">
+
+                        <a href="https://wa.me/59169172830"
+                           target="_blank"
+                           class="social-circle">
+
+                            <i class="bi bi-whatsapp"></i>
+
+                        </a>
+
+                        <a href="https://instagram.com/by_kimlake"
+                           target="_blank"
+                           class="social-circle">
+
+                            <i class="bi bi-instagram"></i>
+
+                        </a>
+
+                    </div>
+
+                    <small class="text-muted">
+
+                        © @DateTime.Now.Year BeautyKizzy
+
+                        <br>
+
+                        Desarrollado por
+                        <strong>Kimberly Isabel Lagos Tapia</strong>
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,105 @@
+﻿@model BeautyKizzy.Controllers.ServicioFormViewModel
+@{
+    ViewData["Title"] = "Nuevo servicio";
+}
+
+<div class="card-kizzy p-4" style="max-width:700px; margin:0 auto;">
+    <h3 class="titulo-serif mb-1">Nuevo servicio</h3>
+    <p class="text-muted small mb-4">Define el servicio y los productos que utiliza</p>
+
+    <div asp-validation-summary="ModelOnly" class="alert-kizzy-error mb-3"></div>
+
+    <form method="post" asp-action="Create">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre del servicio</label>
+            <input asp-for="Servicio.Nombre" class="form-control" placeholder="Ej. Manicura semipermanente" required />
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Categoría</label>
+                <select asp-for="Servicio.CategoriaId" class="form-select" required>
+                    <option value="">Selecciona...</option>
+                    @foreach (var cat in Model.Categorias)
+                    {
+                        <option value="@cat.Id">@cat.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label fw-semibold">Duración (min)</label>
+                <input asp-for="Servicio.DuracionMinutos" type="number" class="form-control" min="5" max="480" required />
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label fw-semibold">Precio base (Bs)</label>
+                <input asp-for="Servicio.PrecioBase" type="number" step="0.01" class="form-control" required />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Descripción</label>
+            <textarea asp-for="Servicio.Descripcion" class="form-control" rows="2"></textarea>
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <label class="form-label fw-semibold mb-0">Productos que utiliza este servicio</label>
+            <button type="button" id="btnAgregarProducto" class="btn btn-sm btn-outline-kizzy">+ Agregar producto</button>
+        </div>
+        <p class="text-muted small">Si el producto no existe en inventario, se creará automáticamente con stock 0.</p>
+
+        <div id="productosContainer"></div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex gap-2 justify-content-end">
+            <a asp-action="Index" class="btn btn-outline-kizzy px-4">Cancelar</a>
+            <button type="submit" class="btn-primary-kizzy px-4">Guardar servicio</button>
+        </div>
+    </form>
+</div>
+
+<template id="filaProductoTemplate">
+    <div class="row g-2 mb-2 fila-producto">
+        <div class="col-5">
+            <input type="text" name="ProductosUsados[__INDEX__].NombreProducto" class="form-control form-control-sm" placeholder="Nombre del producto" />
+        </div>
+        <div class="col-3">
+            <input type="text" name="ProductosUsados[__INDEX__].Unidad" class="form-control form-control-sm" placeholder="Unidad (ml, gr...)" />
+        </div>
+        <div class="col-3">
+            <input type="number" step="0.01" name="ProductosUsados[__INDEX__].CantidadUsada" class="form-control form-control-sm" placeholder="Cantidad" />
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-sm btn-outline-kizzy btnQuitarFila">×</button>
+        </div>
+    </div>
+</template>
+
+@section Scripts {
+    <script>
+        let indiceProducto = 0;
+        const container = document.getElementById('productosContainer');
+        const template = document.getElementById('filaProductoTemplate');
+
+        function agregarFilaProducto() {
+            const html = template.innerHTML.replaceAll('__INDEX__', indiceProducto);
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            container.appendChild(div.firstElementChild);
+            indiceProducto++;
+        }
+
+        document.getElementById('btnAgregarProducto').addEventListener('click', agregarFilaProducto);
+
+        container.addEventListener('click', function (e) {
+            if (e.target.classList.contains('btnQuitarFila')) {
+                e.target.closest('.fila-producto').remove();
+            }
+        });
+
+        // Arranca con una fila vacía lista para usar
+        agregarFilaProducto();
+    </script>
+}

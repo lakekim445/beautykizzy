@@ -1,0 +1,240 @@
+﻿@model BeautyKizzy.Controllers.AgendarViewModel
+@{
+    ViewData["Title"] = "Agendar cita";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card-kizzy p-4">
+            <h3 class="titulo-serif mb-1">Agendar cita</h3>
+            <p class="text-muted small mb-4">Elige tu servicio, fecha y horario preferido</p>
+
+            <div asp-validation-summary="ModelOnly" class="alert-kizzy-error mb-3"></div>
+
+            <form method="post" asp-action="Agendar" id="formAgendar">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Servicio</label>
+                    <select name="ServicioId" id="selServicio" class="form-select" required>
+                        <option value="">Selecciona un servicio...</option>
+                        @foreach (var s in Model.Servicios)
+                        {
+                            <option value="@s.Id" data-categoria="@s.CategoriaId">@s.Nombre — @s.PrecioBase.ToString("0")Bs (@s.DuracionMinutos min)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Especialista</label>
+                    <select name="EmpleadoId" id="selEmpleado" class="form-select">
+                        <option value="">Cualquier especialista disponible</option>
+                    </select>
+                    <small class="text-muted">Solo se muestran especialistas de la categoría del servicio elegido</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Fecha</label>
+                    <div id="miniCalendario" class="card-kizzy p-3" style="background:var(--rosa-claro);"></div>
+                    <input type="hidden" name="Fecha" id="inputFecha" />
+                </div>
+
+                <div class="mb-3" id="bloqueHorarios" style="display:none;">
+                    <label class="form-label fw-semibold">Horario disponible</label>
+                    <div class="row g-2" id="contenedorHorarios"></div>
+                    <input type="hidden" name="HoraSeleccionada" id="inputHora" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Notas adicionales (opcional)</label>
+                    <textarea name="Notas" class="form-control" rows="2" placeholder="Ej. Alergias, preferencias..."></textarea>
+                </div>
+
+                <button type="submit" id="btnConfirmar" class="btn-primary-kizzy w-100 py-2" disabled>Confirmar cita</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .mc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .mc-grid {
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            gap: 4px;
+            text-align: center;
+        }
+
+        .mc-day-label {
+            font-size: 0.7rem;
+            color: #888;
+            font-weight: 500;
+            padding-bottom: 4px;
+        }
+
+        .mc-day {
+            padding: 0.45rem 0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            background: var(--blanco);
+        }
+
+            .mc-day.disabled {
+                color: #ccc;
+                cursor: not-allowed;
+                background: transparent;
+            }
+
+            .mc-day.selected {
+                background: var(--rosa-oscuro);
+                color: var(--blanco);
+                font-weight: 600;
+            }
+
+            .mc-day:not(.disabled):hover {
+                background: var(--rosa);
+                color: var(--blanco);
+            }
+
+        .mc-nav-btn {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--negro);
+            font-size: 1.1rem;
+        }
+    </style>
+    <script>
+        (function () {
+            const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            const diasLabel = ['D','L','M','M','J','V','S'];
+            let fechaVista = new Date();
+            fechaVista.setDate(1);
+            let fechaSeleccionada = null;
+
+            const cal = document.getElementById('miniCalendario');
+            const inputFecha = document.getElementById('inputFecha');
+            const inputHora = document.getElementById('inputHora');
+            const btnConfirmar = document.getElementById('btnConfirmar');
+
+            function hoySinHora() {
+                const h = new Date();
+                h.setHours(0,0,0,0);
+                return h;
+            }
+
+            function renderCalendario() {
+                const year = fechaVista.getFullYear();
+                const month = fechaVista.getMonth();
+                const primerDia = new Date(year, month, 1);
+                const diasEnMes = new Date(year, month + 1, 0).getDate();
+                const offset = primerDia.getDay();
+                const hoy = hoySinHora();
+
+                let html = `<div class="mc-header">
+                    <button type="button" class="mc-nav-btn" id="mcPrev">‹</button>
+                    <strong class="small">${meses[month]} ${year}</strong>
+                    <button type="button" class="mc-nav-btn" id="mcNext">›</button>
+                </div><div class="mc-grid">`;
+
+                diasLabel.forEach(d => html += `<div class="mc-day-label">${d}</div>`);
+                for (let i = 0; i < offset; i++) html += `<div></div>`;
+
+                for (let dia = 1; dia <= diasEnMes; dia++) {
+                    const fecha = new Date(year, month, dia);
+                    const esPasado = fecha < hoy;
+                    const esSeleccionado = fechaSeleccionada && fecha.toDateString() === fechaSeleccionada.toDateString();
+                    html += `<div class="mc-day ${esPasado ? 'disabled' : ''} ${esSeleccionado ? 'selected' : ''}" data-fecha="${fecha.toISOString()}">${dia}</div>`;
+                }
+
+                html += `</div>`;
+                cal.innerHTML = html;
+
+                document.getElementById('mcPrev').addEventListener('click', () => { fechaVista.setMonth(fechaVista.getMonth() - 1); renderCalendario(); });
+                document.getElementById('mcNext').addEventListener('click', () => { fechaVista.setMonth(fechaVista.getMonth() + 1); renderCalendario(); });
+
+                cal.querySelectorAll('.mc-day:not(.disabled)').forEach(el => {
+                    el.addEventListener('click', () => {
+                        fechaSeleccionada = new Date(el.dataset.fecha);
+                        inputFecha.value = fechaSeleccionada.toISOString().split('T')[0];
+                        renderCalendario();
+                        cargarHorarios();
+                    });
+                });
+            }
+
+            renderCalendario();
+
+            // Cargar empleados según el servicio elegido
+            const selServicio = document.getElementById('selServicio');
+            const selEmpleado = document.getElementById('selEmpleado');
+
+            selServicio.addEventListener('change', async function () {
+                selEmpleado.innerHTML = '<option value="">Cualquier especialista disponible</option>';
+                if (!this.value) return;
+
+                const res = await fetch(`/Reservas/EmpleadosPorServicio?servicioId=${this.value}`);
+                const empleados = await res.json();
+                empleados.forEach(e => {
+                    const opt = document.createElement('option');
+                    opt.value = e.id;
+                    opt.textContent = e.nombre;
+                    selEmpleado.appendChild(opt);
+                });
+                cargarHorarios();
+            });
+
+            selEmpleado.addEventListener('change', cargarHorarios);
+
+            async function cargarHorarios() {
+                const bloque = document.getElementById('bloqueHorarios');
+                const contenedor = document.getElementById('contenedorHorarios');
+
+                if (!selServicio.value || !inputFecha.value) {
+                    bloque.style.display = 'none';
+                    return;
+                }
+
+                const params = new URLSearchParams({
+                    servicioId: selServicio.value,
+                    fecha: inputFecha.value
+                });
+                if (selEmpleado.value) params.append('empleadoId', selEmpleado.value);
+
+                const res = await fetch(`/Reservas/HorariosDisponibles?${params}`);
+                const horarios = await res.json();
+
+                contenedor.innerHTML = '';
+                inputHora.value = '';
+                btnConfirmar.disabled = true;
+
+                if (horarios.length === 0) {
+                    contenedor.innerHTML = '<p class="text-muted small">No hay horarios disponibles este día, intenta otra fecha.</p>';
+                } else {
+                    horarios.forEach(h => {
+                        const div = document.createElement('div');
+                        div.className = 'col-3 col-md-2';
+                        div.innerHTML = `<div class="time-slot" data-hora="${h}">${h}</div>`;
+                        contenedor.appendChild(div);
+                    });
+                }
+                bloque.style.display = 'block';
+
+                contenedor.querySelectorAll('.time-slot').forEach(slot => {
+                    slot.addEventListener('click', () => {
+                        contenedor.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                        slot.classList.add('selected');
+                        inputHora.value = slot.dataset.hora;
+                        btnConfirmar.disabled = false;
+                    });
+                });
+            }
+        })();
+    </script>
+}

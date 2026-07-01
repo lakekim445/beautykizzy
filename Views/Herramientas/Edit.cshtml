@@ -1,0 +1,40 @@
+﻿@model BeautyKizzy.Models.Herramienta
+@{
+    ViewData["Title"] = "Editar herramienta";
+}
+
+<div class="card-kizzy p-4" style="max-width:500px; margin:0 auto;">
+    <h3 class="titulo-serif mb-4">Editar herramienta</h3>
+
+    <div asp-validation-summary="ModelOnly" class="alert-kizzy-error mb-3"></div>
+
+    <form method="post" asp-action="Edit">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CantidadDisponible" />
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre</label>
+            <input asp-for="Nombre" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Cantidad total</label>
+            <input asp-for="CantidadTotal" type="number" class="form-control" min="1" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Estado físico</label>
+            <select asp-for="Estado" class="form-select">
+                <option value="Bueno">Bueno</option>
+                <option value="Regular">Regular</option>
+                <option value="EnReparacion">En reparación</option>
+            </select>
+        </div>
+        <div class="mb-3 form-check">
+            <input asp-for="Activo" type="checkbox" class="form-check-input" />
+            <label class="form-check-label">Herramienta activa</label>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end mt-4">
+            <a asp-action="Index" class="btn btn-outline-kizzy px-4">Cancelar</a>
+            <button type="submit" class="btn-primary-kizzy px-4">Guardar cambios</button>
+        </div>
+    </form>
+</div>

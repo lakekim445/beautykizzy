@@ -1,0 +1,320 @@
+﻿@model BeautyKizzy.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>BeautyKizzy</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+            body {
+                font-family: 'Poppins',sans-serif;
+                min-height: 100vh;
+                background: linear-gradient(135deg,#FDECEC,#FAD7DF,#FFF7F9);
+                overflow: hidden;
+            }
+
+            .login-page {
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 30px;
+            }
+
+            .login-card {
+                width: 100%;
+                max-width: 450px;
+                background: white;
+                border-radius: 30px;
+                padding: 45px;
+                box-shadow: 0 15px 45px rgba(0,0,0,.08);
+                animation: fade .5s;
+            }
+
+            @@keyframes fade {
+
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .logo {
+                width: 90px;
+                height: 90px;
+                background: linear-gradient(135deg,#ff8ba7,#ff5f8f);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: auto;
+                color: white;
+                font-size: 42px;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 42px;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 0;
+            }
+
+            .kizzy {
+                color: #ff5f8f;
+            }
+
+            .subtitle {
+                text-align: center;
+                color: #777;
+                margin-bottom: 35px;
+            }
+
+            .form-control {
+                border-radius: 15px;
+                padding: 13px;
+                border: 2px solid #eee;
+            }
+
+                .form-control:focus {
+                    border-color: #ff8ba7;
+                    box-shadow: none;
+                }
+
+            .input-group-text {
+                background: white;
+                border-radius: 15px 0 0 15px;
+                border: 2px solid #eee;
+                border-right: none;
+            }
+
+            .password-btn {
+                border: 2px solid #eee;
+                border-left: none;
+                background: white;
+                border-radius: 0 15px 15px 0;
+            }
+
+            .btn-login {
+                background: linear-gradient(135deg,#ff7ca3,#ff5f8f);
+                color: white;
+                border: none;
+                border-radius: 15px;
+                padding: 14px;
+                font-weight: 600;
+                transition: .3s;
+            }
+
+                .btn-login:hover {
+                    transform: translateY(-2px);
+                    color: white;
+                }
+
+            a {
+                color: #ff5f8f;
+                text-decoration: none;
+            }
+
+                a:hover {
+                    color: #ff3366;
+                }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-page">
+
+        <div class="login-card">
+
+            <div class="logo">
+
+                <i class="bi bi-scissors"></i>
+
+            </div>
+
+            <h1>
+
+                Beauty<span class="kizzy">Kizzy</span>
+
+            </h1>
+
+            <p class="subtitle">
+
+                Bienvenida nuevamente 💕
+
+            </p>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <form asp-action="Login" method="post">
+
+                <div class="mb-3">
+
+                    <label asp-for="Email" class="form-label fw-semibold"></label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+
+                            <i class="bi bi-envelope"></i>
+
+                        </span>
+
+                        <input asp-for="Email" class="form-control" />
+
+                    </div>
+
+                    <span asp-validation-for="Email" class="text-danger"></span>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="Password" class="form-label fw-semibold"></label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+
+                            <i class="bi bi-lock"></i>
+
+                        </span>
+
+                        <input asp-for="Password"
+                               id="password"
+                               class="form-control"
+                               type="password" />
+
+                        <button type="button"
+                                class="password-btn"
+                                onclick="mostrarPassword()">
+
+                            <i id="icono" class="bi bi-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                    <span asp-validation-for="Password" class="text-danger"></span>
+
+                </div>
+
+                <div class="d-flex justify-content-between mb-4">
+
+                    <div class="form-check">
+
+                        <input asp-for="RememberMe"
+                               class="form-check-input" />
+
+                        <label asp-for="RememberMe"
+                               class="form-check-label">
+
+                            Recordarme
+
+                        </label>
+
+                    </div>
+
+                    <a href="#">
+
+                        ¿Olvidaste tu contraseña?
+
+                    </a>
+
+                </div>
+
+                <button class="btn btn-login w-100">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+
+                    Iniciar sesión
+
+                </button>
+
+            </form>
+
+            <div class="text-center mt-4">
+
+                ¿No tienes cuenta?
+
+                <a asp-action="Register">
+
+                    Regístrate aquí
+
+                </a>
+
+            </div>
+
+            <div class="text-center mt-3">
+
+                <a asp-controller="Home"
+                   asp-action="Index">
+
+                    ← Volver al inicio
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+            function mostrarPassword(){
+
+            const txt=document.getElementById("password");
+
+            const icon=document.getElementById("icono");
+
+            if(txt.type==="password"){
+
+            txt.type="text";
+
+            icon.className="bi bi-eye-slash";
+
+            }else{
+
+            txt.type="password";
+
+            icon.className="bi bi-eye";
+
+            }
+
+            }
+
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+
+</body>
+
+</html>

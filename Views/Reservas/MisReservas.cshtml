@@ -1,0 +1,68 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Reserva>
+@using BeautyKizzy.Models
+@{
+    ViewData["Title"] = "Mis citas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="titulo-serif mb-0">Mis citas</h2>
+        <p class="text-muted small mb-0">@Model.Count() citas registradas</p>
+    </div>
+    <a asp-action="Agendar" class="btn-primary-kizzy px-4 py-2">+ Nueva cita</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-kizzy p-5 text-center">
+        <i class="bi bi-calendar-heart fs-1" style="color:var(--rosa-oscuro);"></i>
+        <p class="text-muted mt-2 mb-3">Aún no tienes citas agendadas</p>
+        <a asp-action="Agendar" class="btn-primary-kizzy d-inline-block px-4 py-2">Agendar mi primera cita</a>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var r in Model)
+        {
+            <div class="col-md-6">
+                <div class="card-kizzy p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="fw-semibold">@r.Servicio?.Nombre</div>
+                            <div class="small text-muted">con @r.Empleado?.Usuario?.Nombre</div>
+                        </div>
+                        @{
+                            var (claseEstado, textoEstado) = r.Estado switch
+                            {
+                                EstadoReserva.Pendiente => ("stock-medio", "Pendiente"),
+                                EstadoReserva.Confirmada => ("stock-ok", "Confirmada"),
+                                EstadoReserva.EnCurso => ("stock-ok", "En curso"),
+                                EstadoReserva.Completada => ("badge-rol badge-rol-empleado", "Completada"),
+                                EstadoReserva.Cancelada => ("stock-bajo", "Cancelada"),
+                                _ => ("stock-medio", r.Estado.ToString())
+                            };
+                        }
+                        <span class="@claseEstado">@textoEstado</span>
+                    </div>
+                    <div class="small text-muted mt-2">
+                        <i class="bi bi-calendar"></i> @r.FechaHora.ToString("dd/MM/yyyy")
+                        <i class="bi bi-clock ms-2"></i> @r.FechaHora.ToString("HH:mm")
+                    </div>
+                    @if (!string.IsNullOrEmpty(r.Notas))
+                    {
+                        <div class="small text-muted mt-1">"@r.Notas"</div>
+                    }
+
+                    @if (r.Estado == EstadoReserva.Pendiente || r.Estado == EstadoReserva.Confirmada)
+                    {
+                        <form method="post" asp-action="Cancelar" asp-route-id="@r.Id" class="mt-3"
+                              onsubmit="return confirm('¿Seguro que quieres cancelar esta cita?');">
+                            <button type="submit" class="btn btn-sm btn-outline-kizzy w-100">Cancelar cita</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

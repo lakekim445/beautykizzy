@@ -1,0 +1,62 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Servicio>
+@using BeautyKizzy.Models
+@{
+    ViewData["Title"] = "Servicios";
+    var rol = Context.Session.GetString("UsuarioRol");
+    var puedeGestionar = rol == Roles.Gerente || rol == Roles.Admin;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="titulo-serif mb-0">Nuestros servicios</h2>
+        <p class="text-muted small mb-0">@Model.Count() servicios disponibles</p>
+    </div>
+    @if (puedeGestionar)
+    {
+        <a asp-action="Create" class="btn-primary-kizzy px-4 py-2">+ Nuevo servicio</a>
+    }
+</div>
+
+<div class="row g-3">
+    @foreach (var servicio in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card-kizzy h-100 overflow-hidden">
+                <div style="height:150px; background:var(--rosa-claro); display:flex; align-items:center; justify-content:center;">
+                    @if (!string.IsNullOrEmpty(servicio.ImagenUrl))
+                    {
+                        <img src="@servicio.ImagenUrl" style="width:100%; height:100%; object-fit:cover;" alt="@servicio.Nombre" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-magic fs-1" style="color:var(--rosa-oscuro);"></i>
+                    }
+                </div>
+                <div class="p-3">
+                    <span class="badge-rol badge-rol-cliente">@servicio.Categoria?.Nombre</span>
+                    <div class="fw-semibold mt-2">@servicio.Nombre</div>
+                    @if (!string.IsNullOrEmpty(servicio.Descripcion))
+                    {
+                        <p class="small text-muted mb-2">@servicio.Descripcion</p>
+                    }
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted"><i class="bi bi-clock"></i> @servicio.DuracionMinutos min</small>
+                        <span class="fw-semibold" style="color:var(--rosa-oscuro);">Desde @servicio.PrecioBase.ToString("0")Bs</span>
+                    </div>
+
+                    @if (puedeGestionar)
+                    {
+                        <div class="d-flex gap-2 mt-3">
+                            <a asp-action="Edit" asp-route-id="@servicio.Id" class="btn btn-sm btn-outline-kizzy flex-fill">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@servicio.Id" class="btn btn-sm btn-outline-kizzy flex-fill">Desactivar</a>
+                        </div>
+                    }
+                    else if (rol == Roles.Cliente)
+                    {
+                        <a asp-controller="Reservas" asp-action="Agendar" asp-route-servicioId="@servicio.Id" class="btn-primary-kizzy w-100 d-block text-center mt-3 py-1">Agendar</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

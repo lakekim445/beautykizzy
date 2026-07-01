@@ -1,0 +1,150 @@
+
+:root {
+    --rosa: #E86A92;
+    --rosa-hover: #D45481;
+    --rosa-claro: #FFF2F6;
+    --fondo: #FCFAFB;
+    --texto: #2E2E2E;
+}
+
+body {
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: 'Poppins',sans-serif;
+}
+
+.titulo-serif, .logo-kizzy {
+    font-family: 'Fraunces',serif;
+}
+
+.navbar-kizzy {
+    background: rgba(255,255,255,.92) !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+.card-kizzy {
+    background: #fff;
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    transition: .25s;
+}
+
+    .card-kizzy:hover {
+        transform: translateY(-4px);
+    }
+
+.btn-primary-kizzy {
+    background: linear-gradient(135deg,var(--rosa),#F28CB1);
+    color: #fff !important;
+    border: none;
+    border-radius: 14px;
+    padding: .7rem 1.4rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: .25s;
+}
+
+    .btn-primary-kizzy:hover {
+        background: linear-gradient(135deg,var(--rosa-hover),var(--rosa));
+        transform: translateY(-2px);
+    }
+
+.btn-outline-kizzy {
+    border: 2px solid var(--rosa);
+    color: var(--rosa) !important;
+    border-radius: 14px;
+    background: #fff;
+}
+
+    .btn-outline-kizzy:hover {
+        background: var(--rosa-claro);
+    }
+
+.form-control, .form-select {
+    border-radius: 14px;
+    border: 2px solid #ececec;
+    padding: .75rem;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--rosa);
+        box-shadow: none;
+    }
+
+.table {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+    .table thead {
+        background: var(--rosa);
+        color: #fff;
+    }
+
+    .table tbody tr:hover {
+        background: #fff5f8;
+    }
+
+.badge-rol {
+    border-radius: 999px;
+    padding: .4rem .9rem;
+    font-weight: 600;
+}
+
+.footer-kizzy {
+    background: #fff;
+    border-top: 1px solid #eee;
+    color: #777;
+}
+
+.alert-kizzy-success {
+    background: #e8fff2;
+    color: #146c43;
+    border-radius: 14px;
+    padding: 1rem;
+}
+
+.alert-kizzy-error {
+    background: #fff0f0;
+    color: #b42318;
+    border-radius: 14px;
+    padding: 1rem;
+}
+.footer-kizzy {
+    background: #ffffff;
+    border-top: 1px solid #ececec;
+}
+
+    .footer-kizzy h3,
+    .footer-kizzy h5 {
+        color: #d95d89;
+        font-family: 'Fraunces',serif;
+    }
+
+    .footer-kizzy p {
+        color: #666;
+        line-height: 1.8;
+    }
+
+.social-circle {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ffe8f1;
+    color: #d95d89;
+    text-decoration: none;
+    font-size: 22px;
+    transition: .3s;
+}
+
+    .social-circle:hover {
+        background: #d95d89;
+        color: white;
+        transform: translateY(-5px);
+    }

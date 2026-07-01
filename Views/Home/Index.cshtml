@@ -1,0 +1,115 @@
+﻿@model BeautyKizzy.Controllers.HomeViewModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<!-- HERO -->
+<section class="hero-kizzy position-relative mb-5">
+
+    <img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1800&q=80"
+         class="w-100 rounded-5 hero-img"
+         style="height:780px;object-fit:cover;" />
+
+    <div class="position-absolute top-0 start-0 w-100 h-100 rounded-5"
+         style="background:rgba(0,0,0,.45);"></div>
+
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="width:85%;max-width:900px;">
+
+        <div class="text-uppercase fw-bold mb-3">SALÓN DE BELLEZA INTEGRAL</div>
+
+        <h1 class="display-1 titulo-serif fw-bold">
+            Tu belleza,<br />
+            <span style="color:#ff7aa8;">nuestro cuidado</span>
+        </h1>
+
+        <p class="lead mt-4">
+            Cabello, uñas, cejas y tratamientos faciales con profesionales
+            especializados en cada categoría.
+        </p>
+
+        <a asp-controller="Account"
+           asp-action="Register"
+           class="btn-primary-kizzy px-5 py-3 mt-3">
+            <i class="bi bi-calendar-heart"></i>
+            Agendar mi cita
+        </a>
+
+        <div class="row mt-5">
+
+            <div class="col-md-3">
+                <i class="bi bi-award fs-2"></i>
+                <p>Profesionales<br />especializados</p>
+            </div>
+
+            <div class="col-md-3">
+                <i class="bi bi-stars fs-2"></i>
+                <p>Productos<br />de calidad</p>
+            </div>
+
+            <div class="col-md-3">
+                <i class="bi bi-heart fs-2"></i>
+                <p>Atención<br />personalizada</p>
+            </div>
+
+            <div class="col-md-3">
+                <i class="bi bi-shield-check fs-2"></i>
+                <p>Ambiente<br />seguro</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ESTADÍSTICAS -->
+<div class="row text-center g-4 mb-5">
+    <div class="col-md-3"><div class="card-kizzy p-4"><h2>@Model.TotalServicios</h2><p>Servicios</p></div></div>
+    <div class="col-md-3"><div class="card-kizzy p-4"><h2>@Model.TotalEmpleados</h2><p>Especialistas</p></div></div>
+    <div class="col-md-3"><div class="card-kizzy p-4"><h2>@Model.TotalCategorias</h2><p>Categorías</p></div></div>
+    <div class="col-md-3"><div class="card-kizzy p-4"><h2>4.9</h2><p>Calificación</p></div></div>
+</div>
+
+<!-- SERVICIOS -->
+<div class="text-center mb-4">
+    <small class="text-uppercase fw-bold" style="color:#ff6f9f;">LO MÁS SOLICITADO</small>
+    <h2 class="titulo-serif">Nuestros servicios</h2>
+</div>
+
+<div class="row g-4 mb-5">
+    @foreach (var servicio in Model.ServiciosDestacados)
+    {
+        <div class="col-lg-3 col-md-6">
+            <div class="card-kizzy h-100">
+                <img src="@(string.IsNullOrEmpty(servicio.ImagenUrl) ? "https://placehold.co/500x350" : servicio.ImagenUrl)"
+                     style="height:220px;width:100%;object-fit:cover;">
+                <div class="p-3">
+                    <h5>@servicio.Nombre</h5>
+                    <p>@servicio.Descripcion</p>
+                    <div class="d-flex justify-content-between">
+                        <span>@servicio.DuracionMinutos min</span>
+                        <strong>Bs @servicio.PrecioBase</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- SOBRE NOSOTROS -->
+<section class="row align-items-center my-5">
+    <div class="col-lg-6">
+        <h2 class="titulo-serif">¿Por qué elegir BeautyKizzy?</h2>
+        <p>Ofrecemos atención personalizada, productos profesionales y un ambiente moderno para que cada visita sea una experiencia única.</p>
+        <ul>
+            <li>✓ Profesionales certificados</li>
+            <li>✓ Productos de alta calidad</li>
+            <li>✓ Atención personalizada</li>
+            <li>✓ Ambiente cómodo y elegante</li>
+        </ul>
+    </div>
+    <div class="col-lg-6">
+        <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=900&q=80"
+             class="img-fluid rounded-5 shadow" />
+    </div>
+</section>

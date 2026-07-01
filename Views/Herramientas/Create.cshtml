@@ -1,0 +1,35 @@
+﻿@model BeautyKizzy.Models.Herramienta
+@{
+    ViewData["Title"] = "Nueva herramienta";
+}
+
+<div class="card-kizzy p-4" style="max-width:500px; margin:0 auto;">
+    <h3 class="titulo-serif mb-1">Nueva herramienta</h3>
+    <p class="text-muted small mb-4">Ej. Tijeras de corte, secador profesional...</p>
+
+    <div asp-validation-summary="ModelOnly" class="alert-kizzy-error mb-3"></div>
+
+    <form method="post" asp-action="Create">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre</label>
+            <input asp-for="Nombre" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Cantidad total disponible en el salón</label>
+            <input asp-for="CantidadTotal" type="number" class="form-control" min="1" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Estado físico</label>
+            <select asp-for="Estado" class="form-select">
+                <option value="Bueno">Bueno</option>
+                <option value="Regular">Regular</option>
+                <option value="EnReparacion">En reparación</option>
+            </select>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end mt-4">
+            <a asp-action="Index" class="btn btn-outline-kizzy px-4">Cancelar</a>
+            <button type="submit" class="btn-primary-kizzy px-4">Guardar</button>
+        </div>
+    </form>
+</div>

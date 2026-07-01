@@ -1,0 +1,78 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Reserva>
+@using BeautyKizzy.Models
+@{
+    ViewData["Title"] = "Mi agenda";
+}
+
+<div class="mb-4">
+    <h2 class="titulo-serif mb-0">Mi agenda</h2>
+    <p class="text-muted small mb-0">@Model.Count() citas asignadas</p>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-kizzy p-5 text-center">
+        <i class="bi bi-calendar-check fs-1" style="color:var(--rosa-oscuro);"></i>
+        <p class="text-muted mt-2 mb-0">No tienes citas asignadas por el momento</p>
+    </div>
+}
+else
+{
+    <div class="card-kizzy p-0">
+        <table class="table table-kizzy mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-3">Fecha y hora</th>
+                    <th>Servicio</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th class="text-end pe-3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td class="ps-3">
+                            <div class="fw-semibold small">@r.FechaHora.ToString("dd/MM/yyyy")</div>
+                            <div class="text-muted small">@r.FechaHora.ToString("HH:mm")</div>
+                        </td>
+                        <td>@r.Servicio?.Nombre</td>
+                        <td>@r.Cliente?.Nombre</td>
+                        <td>
+                            @{
+                                var (claseEstado, textoEstado) = r.Estado switch
+                                {
+                                    EstadoReserva.Pendiente => ("stock-medio", "Pendiente"),
+                                    EstadoReserva.Confirmada => ("stock-ok", "Confirmada"),
+                                    EstadoReserva.EnCurso => ("badge-rol badge-rol-gerente", "En curso"),
+                                    EstadoReserva.Completada => ("badge-rol badge-rol-empleado", "Completada"),
+                                    _ => ("stock-bajo", r.Estado.ToString())
+                                };
+                            }
+                            <span class="@claseEstado">@textoEstado</span>
+                        </td>
+                        <td class="text-end pe-3">
+                            @if (r.Estado == EstadoReserva.Pendiente)
+                            {
+                                <form method="post" asp-action="Confirmar" asp-route-id="@r.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-kizzy">Confirmar</button>
+                                </form>
+                            }
+                            @if (r.Estado == EstadoReserva.Confirmada)
+                            {
+                                <form method="post" asp-action="MarcarEnCurso" asp-route-id="@r.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-kizzy">Iniciar servicio</button>
+                                </form>
+                            }
+                            @if (r.Estado == EstadoReserva.EnCurso)
+                            {
+                                <a asp-controller="Facturas" asp-action="Cerrar" asp-route-id="@r.Id" class="btn btn-sm btn-primary-kizzy">Cerrar y cobrar</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

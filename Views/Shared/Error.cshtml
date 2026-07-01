@@ -1,0 +1,19 @@
+﻿@model BeautyKizzy.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="card-kizzy p-5 text-center" style="max-width:500px; margin:3rem auto;">
+    <i class="bi bi-exclamation-circle fs-1" style="color:var(--rosa-oscuro);"></i>
+    <h2 class="titulo-serif mt-3">Algo salió mal</h2>
+    <p class="text-muted">Ocurrió un error inesperado. Intenta de nuevo en unos momentos.</p>
+
+    @if (Model.ShowRequestId)
+    {
+        <p class="small text-muted">
+            <strong>ID de referencia:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+
+    <a asp-controller="Home" asp-action="Index" class="btn-primary-kizzy d-inline-block px-4 py-2 mt-3">Volver al inicio</a>
+</div>

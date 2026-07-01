@@ -1,0 +1,57 @@
+﻿@model BeautyKizzy.Controllers.PromocionFormViewModel
+@{
+    ViewData["Title"] = "Editar promoción";
+}
+
+<div class="card-kizzy p-4" style="max-width:600px; margin:0 auto;">
+    <h3 class="titulo-serif mb-1">Editar promoción</h3>
+
+    <div asp-validation-summary="ModelOnly" class="alert-kizzy-error mb-3"></div>
+
+    <form method="post" asp-action="Edit">
+        <input type="hidden" asp-for="Promocion.Id" />
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre de la promoción</label>
+            <input asp-for="Promocion.Nombre" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Servicios incluidos</label>
+            <div class="card-kizzy p-3" style="background:var(--rosa-claro); max-height:220px; overflow-y:auto;">
+                @foreach (var servicio in Model.ServiciosDisponibles)
+                {
+                    var marcado = Model.ServiciosSeleccionados.Contains(servicio.Id);
+                    <div class="form-check">
+                        <input type="checkbox" name="ServiciosSeleccionados" value="@servicio.Id" class="form-check-input"
+                               id="serv_@servicio.Id" checked="@marcado" />
+                        <label class="form-check-label small" for="serv_@servicio.Id">
+                            @servicio.Nombre <span class="text-muted">(@servicio.PrecioBase.ToString("0")Bs)</span>
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Precio del combo (Bs)</label>
+            <input asp-for="Promocion.PrecioPromocion" type="number" step="0.01" class="form-control" required />
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Válido desde</label>
+                <input asp-for="Promocion.FechaInicio" type="date" class="form-control" required />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Válido hasta</label>
+                <input asp-for="Promocion.FechaFin" type="date" class="form-control" required />
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end mt-4">
+            <a asp-action="Index" class="btn btn-outline-kizzy px-4">Cancelar</a>
+            <button type="submit" class="btn-primary-kizzy px-4">Guardar cambios</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,28 @@
+﻿@model BeautyKizzy.Controllers.RegistrarCompraViewModel
+@{
+    ViewData["Title"] = "Registrar compra";
+}
+
+<div class="card-kizzy p-4" style="max-width:480px; margin:0 auto;">
+    <h3 class="titulo-serif mb-1">Recargar stock</h3>
+    <p class="text-muted small mb-4">@Model.ProductoNombre</p>
+
+    <div asp-validation-summary="ModelOnly" class="alert-kizzy-error mb-3"></div>
+
+    <form method="post" asp-action="RegistrarCompra">
+        <input type="hidden" asp-for="ProductoId" />
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Cantidad a agregar</label>
+            <input asp-for="Cantidad" type="number" step="0.01" class="form-control" required autofocus />
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Observación (opcional)</label>
+            <input asp-for="Observacion" class="form-control" placeholder="Ej. Compra mensual a proveedor X" />
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end mt-4">
+            <a asp-action="Index" class="btn btn-outline-kizzy px-4">Cancelar</a>
+            <button type="submit" class="btn-primary-kizzy px-4">Registrar entrada</button>
+        </div>
+    </form>
+</div>

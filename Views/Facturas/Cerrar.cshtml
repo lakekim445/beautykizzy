@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Factura>
+@{
+    ViewData["Title"] = "Facturas";
+}
+
+<div class="mb-4">
+    <h2 class="titulo-serif mb-0">Facturas</h2>
+    <p class="text-muted small mb-0">@Model.Count() facturas emitidas</p>
+</div>
+
+<div class="card-kizzy p-0">
+    <table class="table table-kizzy mb-0">
+        <thead>
+            <tr>
+                <th class="ps-3">N° Factura</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Método</th>
+                <th>Total</th>
+                <th class="text-end pe-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var f in Model)
+            {
+                <tr>
+                    <td class="ps-3 fw-semibold small">@f.NumeroFactura</td>
+                    <td>@f.Cliente?.Nombre</td>
+                    <td class="small text-muted">@f.FechaEmision.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="small text-muted">@f.MetodoPago?.Nombre</td>
+                    <td class="fw-semibold">@f.Total.ToString("0.00")Bs</td>
+                    <td class="text-end pe-3">
+                        <a asp-action="Detalle" asp-route-id="@f.Id" class="btn btn-sm btn-outline-kizzy">Ver</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

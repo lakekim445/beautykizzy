@@ -1,0 +1,53 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Notificacion>
+@{
+    ViewData["Title"] = "Notificaciones";
+}
+
+<div class="mb-4">
+    <h2 class="titulo-serif mb-0">Notificaciones</h2>
+    <p class="text-muted small mb-0">@Model.Count(n => !n.Leida) sin leer</p>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-kizzy p-5 text-center">
+        <i class="bi bi-bell-slash fs-1" style="color:var(--rosa-oscuro);"></i>
+        <p class="text-muted mt-2 mb-0">No tienes notificaciones</p>
+    </div>
+}
+else
+{
+    <div class="d-flex flex-column gap-2">
+        @foreach (var n in Model)
+        {
+            <div class="card-kizzy p-3 notif-item" data-id="@n.Id" style="@(n.Leida ? "" : "border-left:3px solid var(--rosa-oscuro);")">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold small">@n.Titulo</div>
+                        <div class="text-muted small">@n.Mensaje</div>
+                        <div class="text-muted small mt-1">@n.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    @if (!n.Leida)
+                    {
+                        <button class="btn btn-sm btn-outline-kizzy btnMarcarLeida" data-id="@n.Id">Marcar leída</button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.btnMarcarLeida').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const id = this.dataset.id;
+                const formData = new FormData();
+                formData.append('id', id);
+                await fetch('/Notificaciones/MarcarLeida', { method: 'POST', body: formData });
+                this.closest('.notif-item').style.borderLeft = 'none';
+                this.remove();
+            });
+        });
+    </script>
+}

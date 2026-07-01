@@ -1,0 +1,58 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Producto>
+@{
+    ViewData["Title"] = "Inventario de productos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="titulo-serif mb-0">Inventario</h2>
+        <p class="text-muted small mb-0">@Model.Count() productos registrados</p>
+    </div>
+    <a asp-action="Create" class="btn-primary-kizzy px-4 py-2">+ Nuevo producto</a>
+</div>
+
+<div class="card-kizzy p-0">
+    <table class="table table-kizzy mb-0">
+        <thead>
+            <tr>
+                <th class="ps-3">Producto</th>
+                <th>Proveedor</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th class="text-end pe-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prod in Model)
+            {
+                <tr>
+                    <td class="ps-3">
+                        <div class="fw-semibold">@prod.Nombre</div>
+                        <div class="small text-muted">@prod.Descripcion</div>
+                    </td>
+                    <td class="text-muted small">@(prod.Proveedor?.Nombre ?? "—")</td>
+                    <td>@prod.StockActual @prod.UnidadMedida</td>
+                    <td>
+                        @if (prod.StockActual <= prod.StockMinimo)
+                        {
+                            <span class="stock-bajo">Stock bajo</span>
+                        }
+                        else if (prod.StockActual <= prod.StockMinimo * 2)
+                        {
+                            <span class="stock-medio">Regular</span>
+                        }
+                        else
+                        {
+                            <span class="stock-ok">Bueno</span>
+                        }
+                    </td>
+                    <td class="text-end pe-3">
+                        <a asp-action="RegistrarCompra" asp-route-id="@prod.Id" class="btn btn-sm btn-primary-kizzy">+ Stock</a>
+                        <a asp-action="Edit" asp-route-id="@prod.Id" class="btn btn-sm btn-outline-kizzy">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@prod.Id" class="btn btn-sm btn-outline-kizzy">Desactivar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

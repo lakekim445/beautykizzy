@@ -1,0 +1,60 @@
+﻿@model BeautyKizzy.Controllers.EmpleadoFormViewModel
+@{
+    ViewData["Title"] = "Nuevo empleado";
+}
+
+<div class="card-kizzy p-4" style="max-width:600px; margin:0 auto;">
+    <h3 class="titulo-serif mb-1">Nuevo empleado</h3>
+    <p class="text-muted small mb-4">Se creará su cuenta de acceso al sistema</p>
+
+    <div asp-validation-summary="ModelOnly" class="alert-kizzy-error mb-3"></div>
+
+    <form method="post" asp-action="Create">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre completo</label>
+            <input asp-for="Nombre" class="form-control" required />
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Email (login)</label>
+                <input asp-for="Email" type="email" class="form-control" required />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Contraseña</label>
+                <input asp-for="Password" type="password" class="form-control" required />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Teléfono</label>
+            <input asp-for="Telefono" class="form-control" />
+        </div>
+
+        <hr class="my-3" />
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Categoría / especialidad</label>
+                <select asp-for="CategoriaId" class="form-select" required>
+                    <option value="">Selecciona...</option>
+                    @foreach (var cat in Model.Categorias)
+                    {
+                        <option value="@cat.Id">@cat.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">Comisión (%)</label>
+                <input asp-for="ComisionPorcentaje" type="number" step="0.01" class="form-control" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Especialidad específica (opcional)</label>
+            <input asp-for="Especialidad" class="form-control" placeholder="Ej. Coloración avanzada" />
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end mt-4">
+            <a asp-action="Index" class="btn btn-outline-kizzy px-4">Cancelar</a>
+            <button type="submit" class="btn-primary-kizzy px-4">Registrar empleado</button>
+        </div>
+    </form>
+</div>

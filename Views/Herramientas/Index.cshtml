@@ -1,0 +1,50 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Herramienta>
+@{
+    ViewData["Title"] = "Herramientas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="titulo-serif mb-0">Herramientas</h2>
+        <p class="text-muted small mb-0">@Model.Count() herramientas registradas</p>
+    </div>
+    <a asp-action="Create" class="btn-primary-kizzy px-4 py-2">+ Nueva herramienta</a>
+</div>
+
+<div class="card-kizzy p-0">
+    <table class="table table-kizzy mb-0">
+        <thead>
+            <tr>
+                <th class="ps-3">Herramienta</th>
+                <th>Total</th>
+                <th>Disponibles ahora</th>
+                <th>Estado físico</th>
+                <th class="text-end pe-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var h in Model)
+            {
+                <tr>
+                    <td class="ps-3 fw-semibold">@h.Nombre</td>
+                    <td>@h.CantidadTotal</td>
+                    <td>
+                        @if (h.CantidadDisponible == 0)
+                        {
+                            <span class="stock-bajo">Todas en uso</span>
+                        }
+                        else
+                        {
+                            <span class="stock-ok">@h.CantidadDisponible disponibles</span>
+                        }
+                    </td>
+                    <td class="text-muted small">@h.Estado</td>
+                    <td class="text-end pe-3">
+                        <a asp-action="Edit" asp-route-id="@h.Id" class="btn btn-sm btn-outline-kizzy">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@h.Id" class="btn btn-sm btn-outline-kizzy">Desactivar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

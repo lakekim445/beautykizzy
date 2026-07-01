@@ -1,0 +1,89 @@
+﻿@model BeautyKizzy.Controllers.DashboardViewModel
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<div class="mb-4">
+    <h2 class="titulo-serif mb-0">Dashboard</h2>
+    <p class="text-muted small mb-0">Resumen general del negocio</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="card-kizzy p-3 text-center">
+            <div class="titulo-serif fs-3" style="color:var(--rosa-oscuro);">@Model.TotalReservasHoy</div>
+            <small class="text-muted">Reservas hoy</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-kizzy p-3 text-center">
+            <div class="titulo-serif fs-3" style="color:var(--rosa-oscuro);">@Model.VentasHoy.ToString("0")Bs</div>
+            <small class="text-muted">Ventas de hoy</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-kizzy p-3 text-center">
+            <div class="titulo-serif fs-3" style="color:var(--rosa-oscuro);">@Model.VentasMesActual.ToString("0")Bs</div>
+            <small class="text-muted">Ventas del mes</small>
+            @if (Model.CrecimientoPorcentual != 0)
+            {
+                <div class="small mt-1" style="color:@(Model.CrecimientoPorcentual >= 0 ? "var(--sage-oscuro)" : "#A33C30");">
+                    @(Model.CrecimientoPorcentual >= 0 ? "↑" : "↓") @Math.Abs(Model.CrecimientoPorcentual).ToString("0.0")% vs mes anterior
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card-kizzy p-3 text-center">
+            <div class="titulo-serif fs-3" style="color:@(Model.ProductosBajoStock > 0 ? "#A33C30" : "var(--sage-oscuro)");">@Model.ProductosBajoStock</div>
+            <small class="text-muted">Productos con stock bajo</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card-kizzy p-4">
+            <h5 class="titulo-serif fs-5 mb-3">Servicios más solicitados</h5>
+            @if (!Model.ServiciosMasVendidos.Any())
+            {
+                <p class="text-muted small">Aún no hay datos suficientes</p>
+            }
+            else
+            {
+                @foreach (var s in Model.ServiciosMasVendidos)
+                {
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <div class="fw-semibold small">@s.Nombre</div>
+                            <div class="text-muted small">@s.VecesRealizado veces</div>
+                        </div>
+                        <span class="fw-semibold" style="color:var(--rosa-oscuro);">@s.TotalRecaudado.ToString("0")Bs</span>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card-kizzy p-4">
+            <h5 class="titulo-serif fs-5 mb-3">Top empleados</h5>
+            @if (!Model.EmpleadosTop.Any())
+            {
+                <p class="text-muted small">Aún no hay datos suficientes</p>
+            }
+            else
+            {
+                @foreach (var e in Model.EmpleadosTop)
+                {
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <div class="fw-semibold small">@e.Nombre</div>
+                            <div class="text-muted small">@e.ServiciosRealizados servicios · Comisión: @e.ComisionGanada.ToString("0")Bs</div>
+                        </div>
+                        <span class="fw-semibold" style="color:var(--rosa-oscuro);">@e.TotalGenerado.ToString("0")Bs</span>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

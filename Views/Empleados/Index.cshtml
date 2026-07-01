@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BeautyKizzy.Models.Empleado>
+@{
+    ViewData["Title"] = "Empleados";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="titulo-serif mb-0">Empleados</h2>
+        <p class="text-muted small mb-0">@Model.Count() empleados registrados</p>
+    </div>
+    <a asp-action="Create" class="btn-primary-kizzy px-4 py-2">+ Nuevo empleado</a>
+</div>
+
+<div class="card-kizzy p-0">
+    <table class="table table-kizzy mb-0">
+        <thead>
+            <tr>
+                <th class="ps-3">Nombre</th>
+                <th>Email</th>
+                <th>Categoría</th>
+                <th>Comisión</th>
+                <th>Estado</th>
+                <th class="text-end pe-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td class="ps-3 fw-semibold">@emp.Usuario?.Nombre</td>
+                    <td class="text-muted small">@emp.Usuario?.Email</td>
+                    <td><span class="badge-rol badge-rol-empleado">@emp.Categoria?.Nombre</span></td>
+                    <td>@emp.ComisionPorcentaje%</td>
+                    <td>
+                        @if (emp.Activo)
+                        {
+                            <span class="stock-ok">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="stock-bajo">Inactivo</span>
+                        }
+                    </td>
+                    <td class="text-end pe-3">
+                        <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-sm btn-outline-kizzy">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@emp.Id" class="btn btn-sm btn-outline-kizzy">Desactivar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
