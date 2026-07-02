@@ -26,6 +26,9 @@ namespace BeautyKizzy.Models
 
         public bool Activa { get; set; } = true;
 
+        [StringLength(500)]
+        public string? ImagenUrl { get; set; }
+
         public virtual ICollection<PromocionServicio>? PromocionServicios { get; set; }
     }
 }

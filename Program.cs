@@ -1,9 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using BeautyKizzy.Data;
+using BeautyKizzy.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+// Registrar el servicio de Supabase Storage
+builder.Services.AddSingleton<SupabaseStorageService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
